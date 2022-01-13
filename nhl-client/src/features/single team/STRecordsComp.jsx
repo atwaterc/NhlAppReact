@@ -1,11 +1,15 @@
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import Spinner from '../common/Spinner';
+import { useParams } from 'react-router-dom';
+
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 
-function STRecordsComp({ stats, rankings }) {
-
-    console.log('inside STRecords ', stats);
-    const ts = stats.splits[0].stat;
-    const tr = rankings.splits[0].stat;
+function STRecordsComp() {
+    const params = useParams();
+    const [team, setTeam] = useState({});
+    const [loading, setLoading] = useState(true);
 
     const useStyles = makeStyles({
         tableCell: {
@@ -14,6 +18,20 @@ function STRecordsComp({ stats, rankings }) {
     });
 
     const classes = useStyles()
+
+    // get team stats for year, W, L, OT, PP% etc.
+    useEffect(() => (
+        axios.get(`https://statsapi.web.nhl.com/api/v1/teams/${params.teamId}/stats`)
+        .then(res => setTeam(res.data))
+        .catch(err => console.error(err))
+        .finally(() => setLoading(false))
+    ), [params.teamId])
+
+    if (loading) 
+        return ( <Spinner /> )
+
+    const ts = team.stats[0].splits[0].stat;
+    const tr = team.stats[1].splits[0].stat;
 
     return (
         <TableContainer component={Paper} sx={{ mt: 3 }}>

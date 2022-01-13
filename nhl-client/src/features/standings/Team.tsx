@@ -48,7 +48,7 @@ export default function Team({ team }: Props) {
 
     return (
        <TableRow hover={true} sx={rowStyle} key={team.team.name}>
-           <TableCell onClick={() => navigate(`/team/${team.team.id}`)} id={team.team.id} sx={{ color: 'black', minWidth: 220, alignItems:'center', justifyContent: 'center'}} component="th" scope="row">
+           <TableCell onClick={() => navigate(`/team/${team.team.id}`, {state:{streak:team.streak.streakCode}})} id={team.team.id} sx={{ color: 'black', minWidth: 220, alignItems:'center', justifyContent: 'center'}} component="th" scope="row">
                {team.divisionRank} &nbsp;
                <Box
                     component="img"

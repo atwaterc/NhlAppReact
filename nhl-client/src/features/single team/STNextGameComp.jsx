@@ -1,13 +1,28 @@
 import { Box, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import Spinner from '../common/Spinner';
 
-function STNextGameComp({ nextGame }) {
+
+function STNextGameComp() {
     const params = useParams();
+    const [nextGame, setNextGame] = useState({});
+    const [loading, setLoading] = useState(true);
+
+    // get next game info
+    useEffect(() => (
+        axios.get(`https://statsapi.web.nhl.com/api/v1/teams/${params.teamId}?expand=team.schedule.next`)
+        .then(res => setNextGame(res.data))
+        .catch(err => console.error(err))
+        .finally(() => setLoading(false))
+    ), [params.teamId]) 
 
     let opponentId;
     let vsStatus;
 
-    console.log('STNextGameComp ', nextGame.teams[0].nextGameSchedule.dates[0].games[0].teams);
+    if (loading) 
+        return ( <Spinner /> )
 
     const teamGameData = nextGame.teams[0].nextGameSchedule.dates[0].games[0].teams;
     const gameDate = nextGame.teams[0].nextGameSchedule.dates[0].games[0].gameDate;
@@ -16,7 +31,8 @@ function STNextGameComp({ nextGame }) {
     let formattedDate = newDate.toLocaleDateString('en-US');
 
     // determine vs or @
-    if (params.teamId !== teamGameData.home.team.id){
+    console.log('T OR F ', typeof params.teamId, typeof teamGameData.home.team.id)
+    if (params.teamId !== teamGameData.home.team.id.toString()){
         opponentId = teamGameData.home.team.id
         vsStatus = '@';
     } else {

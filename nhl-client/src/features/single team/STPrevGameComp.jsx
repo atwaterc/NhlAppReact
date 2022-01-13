@@ -1,7 +1,26 @@
+import axios from 'axios';
+import Spinner from '../common/Spinner';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+
 import { Grid, Box, Typography } from '@mui/material';
 
-function STPrevGameComp({ prevGame }) {
-    console.log('STPrevGameComp ', prevGame);
+function STPrevGameComp() {
+    const params = useParams();
+    const [prevGame, setPrevGame] = useState({});
+    const [loading, setLoading] = useState(true);
+    
+    // get previous game info
+    useEffect(() => (
+        axios.get(`https://statsapi.web.nhl.com/api/v1/teams/${params.teamId}?expand=team.schedule.previous`)
+        .then(res => setPrevGame(res.data))
+        .catch(err => console.error(err))
+        .finally(() => setLoading(false))
+    ), [params.teamId]) 
+
+    if (loading) 
+        return ( <Spinner /> )
+    console.log(prevGame);
     const teamGameData = prevGame.teams[0].previousGameSchedule.dates[0].games[0].teams;
 
     let hLogoUrl = `http://www-league.nhlstatic.com/images/logos/teams-current-primary-light/${teamGameData.home.team.id}.svg`;

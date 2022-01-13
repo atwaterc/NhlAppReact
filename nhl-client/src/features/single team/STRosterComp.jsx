@@ -1,8 +1,28 @@
-import { TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Table } from '@mui/material';
 import React from 'react';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import Spinner from '../common/Spinner';
+import { useParams } from 'react-router-dom';
 
-function STRosterComp({ roster }) {
-    console.log('STRosterComp ', roster)
+import { TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Table } from '@mui/material';
+
+function STRosterComp() {
+
+    const params = useParams();
+    const [roster, setRoster] = useState({});
+    const [loading, setLoading] = useState(true);
+
+    // get team roster for year
+    useEffect(() => (
+        axios.get(`https://statsapi.web.nhl.com/api/v1/teams/${params.teamId}/roster`)
+        .then(res => setRoster(res.data))
+        .catch(err => console.error(err))
+        .finally(() => setLoading(false))
+    ), [params.teamId])
+
+    if (loading) 
+        return ( <Spinner /> )
+        
     return (
         <TableContainer component={Paper} sx={{ mt: 3, mb: 3 }}>
             <Table size='small'>
