@@ -6,6 +6,12 @@ const standingsReducer = (state, action) => {
 				standings: action.payload,
 				loading: false,
 			};
+		case 'GET_SCORES':
+			return {
+				...state,
+				scores: action.payload,
+				loading: false,
+			};
 		case 'SET_LOADING':
 			return {
 				...state,

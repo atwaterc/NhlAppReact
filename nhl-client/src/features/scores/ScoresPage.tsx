@@ -1,35 +1,41 @@
 import { Container, Typography } from '@mui/material';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useEffect, useContext } from 'react';
+import { getScores } from '../../context/NhlActions';
+import NhlContext from '../../context/NhlContext';
 import Spinner from '../common/Spinner';
 import ScoresBox from './ScoresBox';
 
 export default function ScoresPage() {
-    const [loading, setLoading] = useState(true);
-    const [scores, setScores] = useState<any>({});
+	const { scores, loading, dispatch } = useContext(NhlContext);
 
-    useEffect(() => {
-        document.title = 'NHL | Scores';
-        axios.get('https://statsapi.web.nhl.com/api/v1/schedule')
-            .then(res => setScores(res.data))
-            .catch(err => console.error(err))
-            .finally(() => setLoading(false));
-    }, [])
+	useEffect(() => {
+		dispatch({ type: 'SET_LOADING' });
+		document.title = 'NHL | Scores';
 
-    if (loading) return (
-        <Spinner />
-    )
+		const getScoresData = async () => {
+			const scoresData = await getScores();
+			console.log('scorespage ', scoresData);
+			dispatch({ type: 'GET_SCORES', payload: scoresData });
+		};
 
-    if (scores === null || scores === undefined) 
-        return (
-            <Typography variant="h5" align="center">No Games Scheduled Today</Typography>
-        )
+		getScoresData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-    return (
-        <Container id="scoresContainer">
-            { scores.dates[0].games.map((game: any) => (
-                <ScoresBox key={game.gamePk}  game={game}/>
-            ))}
-        </Container>
-    )
+	if (loading) return <Spinner />;
+
+	if (scores === null || scores === undefined)
+		return (
+			<Typography variant='h5' align='center'>
+				No Games Scheduled Today
+			</Typography>
+		);
+
+	return (
+		<Container id='scoresContainer'>
+			{scores.map((game: any) => (
+				<ScoresBox key={game.gamePk} game={game} />
+			))}
+		</Container>
+	);
 }

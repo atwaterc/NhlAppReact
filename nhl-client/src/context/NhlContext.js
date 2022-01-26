@@ -6,6 +6,7 @@ const NhlContext = createContext();
 export const NhlProvider = ({ children }) => {
 	const initialState = {
 		standings: [],
+		scores: [],
 		loading: false,
 	};
 
