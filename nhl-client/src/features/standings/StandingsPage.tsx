@@ -1,35 +1,34 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
+import { getStandings } from '../../context/standings/StandingsActions';
+import StandingsContext from '../../context/standings/StandingsContext';
 import Spinner from '../common/Spinner';
 import Division from './Division';
 
 export default function StandingsPage() {
+	//const [standings, setStandings] = useState<any>({});
 
-    const [loading, setLoading] = useState(true);
-    const [standings, setStandings] = useState<any>({});
+	const { standings, dispatch, loading } = useContext(StandingsContext);
 
-    useEffect(() => {
-        document.title = 'NHL | Standings';
-        axios.get('https://statsapi.web.nhl.com/api/v1/standings')
-        .then(response =>setStandings(response.data))
-        .catch(error => console.log(error))
-        .finally(() => setLoading(false));
-    }, [])
+	useEffect(() => {
+		dispatch({ type: 'SET_LOADING' });
+		document.title = 'NHL | Standings';
+		const getStandingsData = async () => {
+			const standingsData = await getStandings();
+			dispatch({ type: 'GET_STANDINGS', payload: standingsData });
+		};
 
-    if (loading) return (
-        <Spinner />
-    )
+		getStandingsData();
 
-    // if (standings) {  
-    //     console.log("printing standings");
-    //     console.log(standings.records[0].division.id);
-    // }
-    
-    return (
-        <>
-            {standings.records.map((div:any, index:number) => (
-                <Division key={div.division.id} division={div} />
-            ))} 
-        </>
-    )
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	if (loading) return <Spinner />;
+
+	return (
+		<>
+			{standings.map((div: any) => (
+				<Division key={div.division.name} division={div} />
+			))}
+		</>
+	);
 }

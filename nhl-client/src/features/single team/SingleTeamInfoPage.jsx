@@ -7,7 +7,6 @@ import STRecordsComp from './STRecordsComp';
 import STNextGameComp from './STNextGameComp';
 import STPrevGameComp from './STPrevGameComp';
 import STRosterComp from './STRosterComp';
-import STPlayerInfo from './STPlayerInfo';
 
 // interface TeamInfo {
 //     rink: string,
@@ -57,15 +56,7 @@ function SingleTeamInfoPage() {
             <Grid item sm={16}>
                 <STRecordsComp/>
             </Grid>
-            <Grid item sm={8}>
-               <STRosterComp/>
-            </Grid>
-            <Grid item sm={1}>
-                
-            </Grid>
-            <Grid item sm={6}>
-            <STPlayerInfo />
-            </Grid>
+            <STRosterComp />
         </Grid>
     )
 }
