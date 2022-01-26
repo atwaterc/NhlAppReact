@@ -1,13 +1,13 @@
 import { useContext, useEffect } from 'react';
-import { getStandings } from '../../context/standings/StandingsActions';
-import StandingsContext from '../../context/standings/StandingsContext';
+import { getStandings } from '../../context/NhlActions';
+import NhlContext from '../../context/NhlContext';
 import Spinner from '../common/Spinner';
 import Division from './Division';
 
 export default function StandingsPage() {
 	//const [standings, setStandings] = useState<any>({});
 
-	const { standings, dispatch, loading } = useContext(StandingsContext);
+	const { standings, dispatch, loading } = useContext(NhlContext);
 
 	useEffect(() => {
 		dispatch({ type: 'SET_LOADING' });

@@ -1,6 +1,6 @@
 import { Container, createTheme, ThemeProvider } from '@mui/material';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { StandingsProvider } from '../../context/standings/StandingsContext';
+import { NhlProvider } from '../../context/NhlContext';
 import GameDetailsPage from '../../features/game-details/GameDetailsPage';
 import HomePage from '../../features/home/HomePage';
 import ScoresPage from '../../features/scores/ScoresPage';
@@ -17,7 +17,7 @@ function App() {
 	});
 
 	return (
-		<StandingsProvider>
+		<NhlProvider>
 			<Router>
 				<ThemeProvider theme={theme}>
 					<Header />
@@ -36,7 +36,7 @@ function App() {
 					</Container>
 				</ThemeProvider>
 			</Router>
-		</StandingsProvider>
+		</NhlProvider>
 	);
 }
 
