@@ -48,7 +48,7 @@ export default function Team({ team }: Props) {
 	//     );
 
 	return (
-		<TableRow hover={true} sx={rowStyle} key={team.team.name}>
+		<TableRow hover={true} sx={rowStyle}>
 			<TableCell
 				onClick={() =>
 					navigate(`/team/${team.team.id}`, {

@@ -15,6 +15,8 @@ export const getStandings = async () => {
 
 export const getScores = async () => {
 	const response = await nhlApi.get('/schedule');
-
+	if (response.data.dates === undefined || response.data.dates.length === 0) {
+		return null;
+	}
 	return response.data.dates[0].games;
 };
